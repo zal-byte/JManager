@@ -4,6 +4,7 @@
         <menu>
             <item
                 android:id="@+id/profile"
+                android:icon="@drawable/ic_person_24"
                 android:title="Profile" />
         </menu>
     </item>
@@ -11,6 +12,7 @@
         <menu>
             <item
                 android:id="@+id/logout"
+                android:icon="@drawable/ic_exit_24"
                 android:title="Logout" />
         </menu>
     </item>

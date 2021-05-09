@@ -29,10 +29,8 @@ class Handler {
         try {
             URL site = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) site.openConnection();
-            connection.setDoOutput(true);
             connection.setReadTimeout(270000);
             connection.setConnectTimeout(270000);
-            connection.setDoInput(true);
             connection.setRequestMethod("GET");
 
             StringBuilder result = new StringBuilder();

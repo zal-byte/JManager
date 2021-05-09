@@ -6,35 +6,47 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import Client.Client;
 import SharedPref.UserSession;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    Toolbar main_toolbar;
-    NavigationView main_nav_view;
-    ActionBarDrawerToggle toggle;
-    DrawerLayout main_drawer;
+    public Toolbar main_toolbar;
+    public static NavigationView main_nav_view;
+    public ActionBarDrawerToggle toggle;
+    public DrawerLayout main_drawer;
 
-    UserSession userSession;
-    Client client;
+    public UserSession userSession;
+    public Client client;
+    static Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        activity = MainActivity.this;
         //
         userSession = new UserSession(MainActivity.this);
         client = new Client();
@@ -58,7 +70,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void logic() {
+        fetchData();
+    }
 
+    @SuppressLint("StaticFieldLeak")
+    public static void fetchData() {
+        final Client client = new Client();
+        final CircleImageView imageHeader = main_nav_view.getHeaderView(0).findViewById(R.id.PProfilePicture_nav);
+
+        imageHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.startActivity(new Intent(((MainActivity) activity), ProfileActivity.class).putExtra("who", "me").putExtra("PUsername", ((MainActivity) activity).userSession.sharedPreferences.getString(((MainActivity) activity).userSession.PUsername, "")));
+            }
+        });
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+
+                if (result != null) {
+                    if (!result.isEmpty()) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            JSONArray jsonArray = jsonObject.getJSONArray("fetchProfileData");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject obj = jsonArray.getJSONObject(i);
+                                if (obj.getBoolean("status") == true) {
+                                    Picasso.get().load(client.imgProfSrc + obj.getString("PProfilePicture")).into(imageHeader);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                String res;
+                res = client.GET(client.profile + "?Request=fetchProfileData&PUsername=" + ((MainActivity) activity).userSession.sharedPreferences.getString(((MainActivity) activity).userSession.PUsername, ""));
+                return res;
+            }
+        }.execute();
     }
 
     @Override
@@ -66,7 +121,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.logout:
                 logout();
+                break;
             case R.id.profile:
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("who", "me");
+                intent.putExtra("PUsername", userSession.sharedPreferences.getString(userSession.PUsername, ""));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
