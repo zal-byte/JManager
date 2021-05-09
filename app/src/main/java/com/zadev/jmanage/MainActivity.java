@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public Client client;
     static Activity activity;
 
+
+    CardView btn_card_see, btn_card_new, btn_card_payment_manage, btn_card_payment_request;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         main_toolbar = findViewById(R.id.main_toolbar);
         main_nav_view = findViewById(R.id.main_nav_view);
         main_drawer = findViewById(R.id.main_drawer);
+
+
+        //main_dashboard.xml
+        btn_card_see = findViewById(R.id.btn_card_see);
+        btn_card_new = findViewById(R.id.btn_card_new);
+        btn_card_payment_manage = findViewById(R.id.btn_card_payment_manage);
+        btn_card_payment_request = findViewById(R.id.btn_card_payment_request);
+
+        btn_card_see.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProductActivity.class).putExtra("what", "see"));
+            }
+        });
+        btn_card_new.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProductActivity.class).putExtra("what", "new"));
+            }
+        });
+        btn_card_payment_manage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, PaymentActivity.class).putExtra("what", "manage"));
+            }
+        });
+        btn_card_payment_request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, PaymentActivity.class).putExtra("what", "request"));
+            }
+        });
     }
 
     void logic() {

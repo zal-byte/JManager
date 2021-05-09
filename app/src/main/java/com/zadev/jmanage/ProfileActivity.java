@@ -50,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
     TextView PName, PAddress, PPhone, PEmail;
     ImageButton PAddress_edit, PPhone_edit, PEmail_edit;
     CircleImageView PProfilePicture;
-
     //end of Widget
 
     private SharedPreferences sharedPreferences;
@@ -65,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
     AlertDialog.Builder profile_dialog;
 
 
-    Dialog lihat_d;
+    Dialog see_dialog;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -148,11 +147,11 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (profile_menu.get(which).equals("Lihat")) {
-                    lihat_d = new Dialog(ProfileActivity.this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+                    see_dialog = new Dialog(ProfileActivity.this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
                     ImageView img = new ImageView(ProfileActivity.this);
                     Picasso.get().load(client.imgProfSrc + users.get(0).PProfilePicture).into(img);
-                    lihat_d.setContentView(img);
-                    lihat_d.show();
+                    see_dialog.setContentView(img);
+                    see_dialog.show();
                 } else if (profile_menu.get(which).equals("Unggah gambar")) {
                     setSession("PProfilePicture_edit");
                     CropImage.activity().start(ProfileActivity.this);
