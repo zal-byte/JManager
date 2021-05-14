@@ -13,4 +13,25 @@
         android:background="?attr/colorPrimary"
         android:theme="?attr/actionBarTheme" />
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/product_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/prod_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/row_product" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
 </RelativeLayout>

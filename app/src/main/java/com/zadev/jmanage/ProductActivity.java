@@ -8,12 +8,15 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import Adapter.ProductListAdapter;
 import Client.Client;
 import Model.Product;
 import SharedPref.UserSession;
@@ -27,6 +30,7 @@ public class ProductActivity extends AppCompatActivity {
 
     //Widget
     Toolbar product_toolbar;
+    RecyclerView prod_recyclerview;
 
     //end of Widget
     @Override
@@ -45,13 +49,26 @@ public class ProductActivity extends AppCompatActivity {
 
     void init() {
         product_toolbar = findViewById(R.id.product_toolbar);
-
+        prod_recyclerview = findViewById(R.id.prod_recyclerview);
 
         setSupportActionBar(product_toolbar);
     }
 
     void logic() {
-        loadProduct();
+        Product product = new Product();
+        product.setProdID("10");
+        product.setProdName("Buah belimbing");
+        product.setProdWeight("10 Ton");
+        product.setProdQuantity("100");
+        product.setProdComm("50");
+        product.setProdLove("50");
+        product.setProdDesc("Ini adalah produk terbaik");
+        product.setProdPrice("50000");
+        product.setProdPict(String.valueOf(R.drawable.bg1));
+        product.setPUsername("yolo");
+        products.add(product);
+
+        showData();
     }
 
     ArrayList<Product> products = new ArrayList<>();
@@ -116,6 +133,8 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     void showData() {
-
+        ProductListAdapter adapter = new ProductListAdapter(ProductActivity.this, products);
+        prod_recyclerview.setAdapter(adapter);
+        prod_recyclerview.setLayoutManager(new LinearLayoutManager(this));
     }
 }
